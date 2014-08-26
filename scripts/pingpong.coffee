@@ -21,7 +21,7 @@ module.exports = (robot) ->
         msg.send "(pingpong) #{robot.brain.data.players[0]} wants to play. Anyone else wants to play ping pong?"
       else
         if (sender in robot.brain.data.players)
-          msg.send "(pingpong) #{sender} REALLY wants to play. #{maxplayers - robot.brain.data.players.length} More needed"
+          msg.send "(pingpong) #{sender} REALLY wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
         else
           robot.brain.data.players.push sender
           if (playersAreReady(robot.brain.data.players))
@@ -42,7 +42,7 @@ module.exports = (robot) ->
             sender = commandData
             robot.brain.data.players.remove(sender)
 
-          msg.send "(pingpong) #{sender} is a chicken. #{maxplayers - robot.brain.data.players.length} More needed"
+          msg.send "(pingpong) #{sender} is a chicken. #{maxplayers - robot.brain.data.players.length} more needed"
         when "add"
           commandData = msg.match[2].substring(msg.match[2].indexOf(' ') + 1)
           players = commandData.split(",")
