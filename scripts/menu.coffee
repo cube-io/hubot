@@ -11,6 +11,12 @@ module.exports = (robot) ->
     menu = JSON.parse(body)[getDate()]
     if menu?
      msg.send "(chompy) " + menu
+     msg.http('http://ajax.googleapis.com/ajax/services/search/images')
+     .query(q: menu.slice(0, menu.indexOf(',')), v: '1.0')
+     .get() (err, res, body) ->
+      images = JSON.parse(body).responseData?.results
+      if images?.length > 0
+       msg.send images[0].unescapedUrl
     else
      msg.send "Couldn't find the menu for date " + getDate()
 
