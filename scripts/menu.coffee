@@ -12,7 +12,7 @@ module.exports = (robot) ->
     if menu?
      msg.send "(chompy) " + menu
      msg.http('http://ajax.googleapis.com/ajax/services/search/images')
-     .query(q: menu.slice(0, menu.indexOf(',')), v: '1.0')
+     .query(q: menu.split(/\s+/).slice(0, 2).join(" "), v: '1.0')
      .get() (err, res, body) ->
       images = JSON.parse(body).responseData?.results
       if images?.length > 0
