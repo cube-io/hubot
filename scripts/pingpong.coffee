@@ -60,7 +60,13 @@ module.exports = (robot) ->
             msg.send "#{emoticon} #{robot.brain.data.players.join(', ')} wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
         when "rank"
           score = parseFloat(msg.match[2].split(" ")[1])
-          robot.brain.data.rankings[sender] = score
+          if score
+            robot.brain.data.rankings[sender] = score
+          else
+            if robot.brain.data.rankings[sender]
+              score = robot.brain.data.rankings[sender]
+            else
+              score = robot.brain.data.rankings[sender] = 0
           rank = findRank(sender, robot)
           msg.send "#{emoticon} #{sender} is now ranked ##{rank} of #{Object.keys(robot.brain.data.rankings).length} with a score of #{score}"
         else
