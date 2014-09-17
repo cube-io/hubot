@@ -7,14 +7,14 @@ Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 playersAreReady = (players) -> (maxplayers - players.length) <= 0
 startGame = (message, robot) -> 
   robot.brain.data.players.shuffle()
-  message.send "(pingpong) #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
+  message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
   robot.brain.data.players = []
 findRank = (player, robot) ->
   playerScore = robot.brain.data.rankings[player]
   position = 1
   position += (robot.brain.data.rankings[key] > playerScore ? 1 : 0) for key in Object.keys(robot.brain.data.rankings)
   position
-
+emoticon = ":pingpong:"
 
 module.exports = (robot) ->
   robot.brain.data.players = []
@@ -25,20 +25,20 @@ module.exports = (robot) ->
     if (command is "")
       if (robot.brain.data.players.length is 0)
         robot.brain.data.players.push sender
-        msg.send "(pingpong) #{robot.brain.data.players[0]} wants to play. Anyone else wants to play ping pong?"
+        msg.send "#{emoticon} #{robot.brain.data.players[0]} wants to play. Anyone else wants to play ping pong?"
       else
         if (sender in robot.brain.data.players)
-          msg.send "(pingpong) #{sender} REALLY wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
+          msg.send "#{emoticon} #{sender} REALLY wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
         else
           robot.brain.data.players.push sender
           if (playersAreReady(robot.brain.data.players))
             startGame(msg, robot)
           else
-            msg.send "(pingpong) #{sender} is game! #{maxplayers - robot.brain.data.players.length} more needed"
+            msg.send "#{emoticon} #{sender} is game! #{maxplayers - robot.brain.data.players.length} more needed"
     else
       switch command
         when "queue", "kø"
-          msg.send "(pingpong) #{robot.brain.data.players.join(', ')} wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
+          msg.send "#{emoticon} #{robot.brain.data.players.join(', ')} wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
         when "remove", "fjern"
           message = msg.match[2]
           commandData = if message.indexOf(' ') is -1 then '' else message.substring(message.indexOf(' ') + 1)
@@ -49,7 +49,7 @@ module.exports = (robot) ->
             sender = commandData
             robot.brain.data.players.remove(sender)
 
-          msg.send "(pingpong) #{sender} is a chicken. #{maxplayers - robot.brain.data.players.length} more needed"
+          msg.send "#{emoticon} #{sender} is a chicken. #{maxplayers - robot.brain.data.players.length} more needed"
         when "add"
           commandData = msg.match[2].substring(msg.match[2].indexOf(' ') + 1)
           players = commandData.split(",")
@@ -57,11 +57,11 @@ module.exports = (robot) ->
           if (playersAreReady(robot.brain.data.players))
             startGame(msg, robot)
           else
-            msg.send "(pingpong) #{robot.brain.data.players.join(', ')} wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
+            msg.send "#{emoticon} #{robot.brain.data.players.join(', ')} wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
         when "rank"
           score = parseFloat(msg.match[2].split(" ")[1])
           robot.brain.data.rankings[sender] = score
           rank = findRank(sender, robot)
-          msg.send "(pingpong) #{sender} is now ranked ##{rank} of #{Object.keys(robot.brain.data.rankings).length} with a score of #{score}"
+          msg.send "#{emoticon} #{sender} is now ranked ##{rank} of #{Object.keys(robot.brain.data.rankings).length} with a score of #{score}"
         else
           msg.send "#{command} is an unknown command"
