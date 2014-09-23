@@ -3,22 +3,26 @@
 #
 # Commands:
 #   hubot menu
+$ = require('jquery')(require("jsdom").jsdom().parentWindow)
 
 module.exports = (robot) ->
  robot.respond /menu$/i, (msg) ->
-  msg.http("https://gist.githubusercontent.com/Leh2/9f500c3f2290fcc269c5/raw/")
+  msg.http("http://m.opino.dk/index.php/app/index/id/8")
    .get() (error, response, body) ->
-    menu = JSON.parse(body)[getDate()]
-    if menu?
-     msg.send "(chompy) " + menu
-     msg.http('http://ajax.googleapis.com/ajax/services/search/images')
-     .query(q: menu.split(/\s+/).slice(0, 2).join(" "), v: '1.0')
-     .get() (err, res, body) ->
-      images = JSON.parse(body).responseData?.results
-      if images?.length > 0
-       msg.send images[0].unescapedUrl
+    if(error)
+      msg.send error
     else
-     msg.send "Couldn't find the menu for date " + getDate()
+      warmDish = $(body).find('a:contains("Varm ret med tilbehør")').parents('td').find('.app_dish').text()
+      coldDish = $(body).find('a:contains("Pålæg")').parents('td').find('.app_dish').text()
+      menu = warmDish + ' - ' + coldDish
+      msg.send ":fork_and_knife: " + menu
+
+      msg.http('http://ajax.googleapis.com/ajax/services/search/images')
+        .query(q: menu.split(/\s+/).slice(1, 3).join(" "), v: '1.0')
+        .get() (err, res, body) ->
+          images = JSON.parse(body).responseData?.results
+          if images?.length > 0
+            msg.send images[0].unescapedUrl
 
 getDate = () ->
  currentDate = new Date()
