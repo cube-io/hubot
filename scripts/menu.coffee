@@ -18,7 +18,7 @@ module.exports = (robot) ->
       msg.send ":fork_and_knife: " + menu
 
       msg.http('http://ajax.googleapis.com/ajax/services/search/images')
-        .query(q: menu.split(/\s+/).slice(1, 3).join(" "), v: '1.0')
+        .query(q: menu.split(/\s+/).slice(0, 3).join(" "), v: '1.0')
         .get() (err, res, body) ->
           images = JSON.parse(body).responseData?.results
           if images?.length > 0
