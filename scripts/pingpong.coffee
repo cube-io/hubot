@@ -19,7 +19,7 @@ emoticon = ":pingpong:"
 module.exports = (robot) ->
   robot.brain.data.players = []
   robot.brain.data.rankings = {}
-  robot.hear /^(pingpong) ?(.*)/i, (msg) ->
+  robot.hear /^(pingpong|gonggong|pingping|pongping) ?(.*)/i, (msg) ->
     sender = msg.message.user.name
     command = msg.match[2].split(" ")[0]
     if (command is "")
