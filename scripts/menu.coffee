@@ -14,7 +14,8 @@ module.exports = (robot) ->
     else
       warmDish = $(body).find('a:contains("Varm ret med tilbehør")').parents('td').find('.app_dish').text()
       coldDish = $(body).find('a:contains("Pålæg")').parents('td').find('.app_dish').text()
-      menu = warmDish + ' - ' + coldDish
+      dessert = $(body).find('a:contains("Dessert")').parents('td').find('.app_dish').text()
+      menu = warmDish + ' - ' + coldDish + (if dessert then ' - ' + dessert else '')
       msg.send ":fork_and_knife: " + menu
 
       msg.http('http://ajax.googleapis.com/ajax/services/search/images')
