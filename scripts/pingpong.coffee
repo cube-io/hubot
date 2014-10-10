@@ -6,6 +6,7 @@ Array::shuffle = -> @sort -> 0.5 - Math.random()
 Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 playersAreReady = (players) -> (maxplayers - players.length) <= 0
 startGame = (message, robot) -> 
+  updateMatchStatistic player, robot for player in robot.brain.data.players
   robot.brain.data.players.shuffle()
   message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
   robot.brain.data.players = []
@@ -14,10 +15,16 @@ findRank = (player, robot) ->
   position = 1
   position += (robot.brain.data.rankings[key] > playerScore ? 1 : 0) for key in Object.keys(robot.brain.data.rankings)
   position
+updateMatchStatistic = (player, robot) ->
+  if robot.brain.data.playerStatistics[player]
+    robot.brain.data.playerStatistics[player].matches++
+  else
+    robot.brain.data.playerStatistics[player] = matches: 1
 emoticon = ":pingpong:"
 
 module.exports = (robot) ->
   robot.brain.data.players = []
+  robot.brain.data.playerStatistics = {}
   robot.brain.data.rankings = {}
   robot.hear /^(pingpong|gonggong|pingping|pongping) ?(.*)/i, (msg) ->
     sender = msg.message.user.name
@@ -69,5 +76,9 @@ module.exports = (robot) ->
               score = robot.brain.data.rankings[sender] = 0
           rank = findRank(sender, robot)
           msg.send "#{emoticon} #{sender} is now ranked ##{rank} of #{Object.keys(robot.brain.data.rankings).length} with a score of #{score}"
+        when "stats"
+          statistic = robot.brain.data.playerStatistics[sender] ? {}
+          matches = statistic.matches ? 0
+          msg.reply "You have played #{matches} match#{['es' if matches == 0 || matches > 1 ]}"
         else
           msg.send "#{command} is an unknown command"
