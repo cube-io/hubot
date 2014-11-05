@@ -8,7 +8,7 @@ moment = require('moment')
 
 module.exports = (robot) ->
 	robot.brain.data.cakes = []
-	untrustedUsers = ['ditte', 'maria', 'ceciliekrogh', 'michaelerlitz', 'abildgaard']
+	untrustedUsers = []
 
 	robot.respond /cake add (.*)/i, (msg) ->
 		if (msg.message.user.name in untrustedUsers)
