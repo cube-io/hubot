@@ -6,7 +6,7 @@
 $ = require('jquery')(require("jsdom").jsdom().parentWindow)
 
 module.exports = (robot) ->
- robot.respond /menu$/i, (msg) ->
+ robot.respond /(menu|mad|food)$/i, (msg) ->
   msg.http("http://m.opino.dk/index.php/app/index/id/8")
    .get() (error, response, body) ->
     if(error)
