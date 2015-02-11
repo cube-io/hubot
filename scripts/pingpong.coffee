@@ -58,9 +58,16 @@ module.exports = (robot) ->
 
           msg.send "#{emoticon} #{sender} is a chicken. #{maxplayers - robot.brain.data.players.length} more needed"
         when "add"
+          players = [];
           commandData = msg.match[2].substring(msg.match[2].indexOf(' ') + 1)
-          players = commandData.split(",")
+
+          if (commandData == 'random')
+            players.push Object.keys(robot.brain.data.playerStatistics).shuffle()[0]
+          else
+            players = commandData.split(",")
+
           robot.brain.data.players.push player.trim() for player in players
+
           if (playersAreReady(robot.brain.data.players))
             startGame(msg, robot)
           else
