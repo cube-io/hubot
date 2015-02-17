@@ -60,9 +60,11 @@ module.exports = (robot) ->
         when "add"
           players = [];
           commandData = msg.match[2].substring(msg.match[2].indexOf(' ') + 1)
-
-          if (commandData == 'random')
-            players.push Object.keys(robot.brain.data.playerStatistics).shuffle()[0]
+          if (commandData.indexOf('random') != -1)
+            playerData = if commandData.indexOf(' ') is -1 then null else commandData.substring(commandData.indexOf(' ') + 1)
+            if(!playerData)
+              return
+            players.push playerData.split(',').shuffle()[0].trim()
           else
             players = commandData.split(",")
 
