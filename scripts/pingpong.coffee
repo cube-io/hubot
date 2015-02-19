@@ -26,7 +26,7 @@ module.exports = (robot) ->
   robot.brain.data.players = []
   robot.brain.data.playerStatistics = {}
   robot.brain.data.rankings = {}
-  robot.hear /^(pingpong|gonggong|pingping|pongping) ?(.*)/i, (msg) ->
+  robot.hear /^(ping|pong|gong|pling|plang|pang|ting|tong|ding){2} ?(.*)/i, (msg) ->
     sender = msg.message.user.name
     command = msg.match[2].split(" ")[0]
     if (command is "")
