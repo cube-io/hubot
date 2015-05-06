@@ -90,7 +90,11 @@ module.exports = (robot) ->
           matches = statistic.matches ? 0
           msg.reply "You have played #{matches} match#{['es' if matches == 0 || matches > 1 ]}"
         when "clear"
-          msg.send "Queue is cleared. #{robot.brain.data.players.join(', ')} is removed from queue"
+          numberOfPlayers = robot.brain.data.players.length;
+          if(numberOfPlayers == 0)
+            msg.send "No players in queue."
+          else
+            msg.send "Player queue is cleared. #{robot.brain.data.players.join(', ')} #{[if numberOfPlayers > 1 then 'are' else 'is' ]} removed from queue."
           robot.brain.data.players = []
         else
           msg.send "#{command} is an unknown command"
