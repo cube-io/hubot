@@ -9,7 +9,11 @@ startGame = (message, robot) ->
   updateMatchStatistic player, robot for player in robot.brain.data.players
   robot.brain.data.players.shuffle()
   message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
+  robot.brain.data.shuffleCopy = robot.brain.data.players[..]
   robot.brain.data.players = []
+shufflePlayers = (message, robot) ->
+  robot.brain.data.shuffleCopy.shuffle()
+  message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
 findRank = (player, robot) ->
   playerScore = robot.brain.data.rankings[player]
   position = 1
@@ -24,6 +28,7 @@ emoticon = ":pingpong:"
 
 module.exports = (robot) ->
   robot.brain.data.players = []
+  robot.brain.data.shuffleCopy = []
   robot.brain.data.playerStatistics = {}
   robot.brain.data.rankings = {}
   robot.hear /^(ping|pong|gong|pling|plang|pang|ting|tong|ding|p){2} ?(.*)/i, (msg) ->
@@ -33,6 +38,7 @@ module.exports = (robot) ->
       if (robot.brain.data.players.length is 0)
         robot.brain.data.players.push sender
         msg.send "#{emoticon} #{robot.brain.data.players[0]} wants to play. Anyone else wants to play ping pong?"
+        robot.brain.data.shuffleCopy = []
       else
         if (sender in robot.brain.data.players)
           msg.send "#{emoticon} #{sender} REALLY wants to play. #{maxplayers - robot.brain.data.players.length} more needed"
@@ -70,6 +76,8 @@ module.exports = (robot) ->
 
           robot.brain.data.players.push player.trim() for player in players
 
+          robot.brain.data.shuffleCopy = []
+
           if (playersAreReady(robot.brain.data.players))
             startGame(msg, robot)
           else
@@ -96,5 +104,12 @@ module.exports = (robot) ->
           else
             msg.send "Player queue is cleared. #{robot.brain.data.players.join(', ')} #{[if numberOfPlayers > 1 then 'are' else 'is' ]} removed from queue."
           robot.brain.data.players = []
+        when "shuffle", "unfair", "not fair"
+          shuffleLength = robot.brain.data.shuffleCopy.length;
+          if (shuffleLength == 4)
+            msg.send "Shuffling players..."
+            shufflePlayers(msg, robot)
+          else
+            msg.send "Need 4 players to shuffle!"
         else
           msg.send "#{command} is an unknown command"
