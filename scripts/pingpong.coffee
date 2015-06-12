@@ -13,7 +13,7 @@ startGame = (message, robot) ->
   robot.brain.data.players = []
 shufflePlayers = (message, robot) ->
   robot.brain.data.shuffleCopy.shuffle()
-  message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
+  message.send "#{emoticon} #{robot.brain.data.shuffleCopy[0]} & #{robot.brain.data.shuffleCopy[1]} vs #{robot.brain.data.shuffleCopy[2]} & #{robot.brain.data.shuffleCopy[3]}"
 findRank = (player, robot) ->
   playerScore = robot.brain.data.rankings[player]
   position = 1
