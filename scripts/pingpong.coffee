@@ -2,17 +2,22 @@
 # Setting up ping pong teams 
 
 maxplayers = 4 
-Array::shuffle = -> @sort -> 0.5 - Math.random()
+
+# Method to shuffle an array (see https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm)
+swap	= (input, x,  y) -> [input[x], input[y]] = [input[y], input[x]]
+rand	= (x) -> Math.floor(Math.random() * x)
+shuffle	= (input) -> swap(input, i, rand(i)) for i in [input.length - 1 .. 1]
+
 Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
 playersAreReady = (players) -> (maxplayers - players.length) <= 0
 startGame = (message, robot) -> 
   updateMatchStatistic player, robot for player in robot.brain.data.players
-  robot.brain.data.players.shuffle()
+  shuffle(robot.brain.data.players)
   message.send "#{emoticon} #{robot.brain.data.players[0]} & #{robot.brain.data.players[1]} vs #{robot.brain.data.players[2]} & #{robot.brain.data.players[3]}"
   robot.brain.data.shuffleCopy = robot.brain.data.players[..]
   robot.brain.data.players = []
 shufflePlayers = (message, robot) ->
-  robot.brain.data.shuffleCopy.shuffle()
+  shuffle(robot.brain.data.shuffleCopy)
   message.send "#{emoticon} #{robot.brain.data.shuffleCopy[0]} & #{robot.brain.data.shuffleCopy[1]} vs #{robot.brain.data.shuffleCopy[2]} & #{robot.brain.data.shuffleCopy[3]}"
 findRank = (player, robot) ->
   playerScore = robot.brain.data.rankings[player]
@@ -70,7 +75,7 @@ module.exports = (robot) ->
             playerData = if commandData.indexOf(' ') is -1 then null else commandData.substring(commandData.indexOf(' ') + 1)
             if(!playerData)
               return
-            players.push playerData.split(',').shuffle()[0].trim()
+            players.push shuffle(playerData.split(','))[0].trim()
           else
             players = commandData.split(",")
 
@@ -107,7 +112,6 @@ module.exports = (robot) ->
         when "shuffle", "unfair", "not fair"
           shuffleLength = robot.brain.data.shuffleCopy.length;
           if (shuffleLength == 4)
-            msg.send "Shuffling players..."
             shufflePlayers(msg, robot)
           else
             msg.send "Need 4 players to shuffle!"
