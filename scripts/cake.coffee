@@ -16,7 +16,7 @@ module.exports = (robot) ->
 		else
 			cake =
 				desc: msg.match[1]
-				date: moment().format('YYYY/MM/DD')
+				date: moment().format('YYYY-MM-DD')
 				paid: false
 			robot.brain.data.cakes.push cake
 			msg.reply "Okay, got it"
