@@ -16,13 +16,17 @@ module.exports = (robot) ->
 		else
 			cake =
 				desc: msg.match[1]
-				date: moment().format('DD/MM/YYYY hh:mm')
+				date: moment().format('YYYY/MM/DD')
 				paid: false
 			robot.brain.data.cakes.push cake
 			msg.reply "Okay, got it"
 
 	robot.respond /cake$/i, (msg) ->
-		msg.send robot.brain.data.cakes.indexOf(cake) + ': ' + cake.desc for cake in robot.brain.data.cakes when cake.paid is false
+		response = ""
+		for cake, index in robot.brain.data.cakes when cake.paid is false
+			response += "#{index} - #{cake.date}: #{cake.desc}"
+			response += '\n' unless index == robot.brain.data.cakes.length - 1
+		msg.send response
 
 	robot.respond /cake pay (\d+)/i, (msg) ->
 		if (msg.message.user.name in untrustedUsers)
