@@ -29,7 +29,7 @@ updateMatchStatistic = (player, robot) ->
     robot.brain.data.playerStatistics[player].matches++
   else
     robot.brain.data.playerStatistics[player] = matches: 1
-emoticon = ":pingpong:"
+emoticon = ":table_tennis_paddle_and_ball:"
 
 module.exports = (robot) ->
   robot.brain.data.players = []
