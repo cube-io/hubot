@@ -24,7 +24,8 @@ module.exports = (robot) ->
 	robot.respond /cake$/i, (msg) ->
 		response = ""
 		for cake, index in robot.brain.data.cakes when cake.paid is false
-			response += "#{index} - #{cake.date}: #{cake.desc}"
+			daysAgo = moment().diff(cake.date, "days");
+			response += "##{index} (#{daysAgo} days ago): #{cake.desc}"
 			response += '\n' unless index == robot.brain.data.cakes.length - 1
 		msg.send response
 
