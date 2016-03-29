@@ -75,7 +75,10 @@ module.exports = (robot) ->
             playerData = if commandData.indexOf(' ') is -1 then null else commandData.substring(commandData.indexOf(' ') + 1)
             if(!playerData)
               return
-            players.push shuffle(playerData.split(','))[0].trim()
+
+            randomPlayers = [];
+            randomPlayers = shuffle(playerData.split(','))
+            players.push randomPlayers[0].trim()
           else
             players = commandData.split(",")
 
